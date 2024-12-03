@@ -1,0 +1,97 @@
+﻿@using MiniNetflix.Presentation.ViewModelError
+@model SerieDtoViewModel
+@inject IProductionService productionService
+@inject IGenreService genreService
+
+<div class="w-full h-dvh background ">
+    <div class="w-full flex justify-center pt-20  items-center">
+        <div class=" min-h-[600px] bg-gray-900 p-10 rounded-2xl shadowBox xl:w-[60%] 2xl:w-[40%]  mb-10">
+            <h1 class="text-white text-3xl font-bold mb-10">Update Serie</h1>
+        <form class="flex flex-col gap-y-[15px] " id="form" method="PUT"> 
+            <label for="name" class="flex flex-col gap-y-2 text-white text-xl font-normal ">
+                Name
+                    <input type="text" asp-for="Name" name="Name" value="@(ViewBag.Serie.Name)" class="rounded-xl p-[10px] bg-gray-800 text-white text-[16px]" minlength="5" required />
+                    <span class="text-danger" asp-validation-for="Name"></span>
+                </label>
+
+                <label for="name" class="flex flex-col gap-y-2 text-white text-xl font-normal ">
+                 Imagen url
+                    <input type="text" asp-for="ImageUrl" name="ImageUrl" value="@(ViewBag.Serie.ImageUrl)" class="rounded-xl p-[10px] bg-gray-800 text-white text-[16px]" minlength="10" required />
+                    <span class="text-danger" asp-validation-for="ImageUrl"></span>
+                </label>
+
+                <label for="name" class="flex flex-col gap-y-2 text-white text-xl font-normal ">
+                Link Video
+                    <input type="text" asp-for="LinkVideo" name="LinkVideo" value="@(ViewBag.Serie.LinkVideo)" class="rounded-xl p-[10px] bg-gray-800 text-white text-[16px]" minlength="10" required />
+                    <span class="text-danger" asp-validation-for="LinkVideo"></span>
+                </label>
+
+                <label class="flex flex-col gap-y-2 text-white text-xl font-normal ">
+                  Production
+                    <select name="ProductionId" asp-for="ProductionId" class="rounded-xl p-[10px] bg-gray-800 text-white text-[16px]" required>
+                        @foreach (var production in productionService.GetAllProduction())
+                        {
+                            <option value="@production.Id" >@production.Name</option>
+                        }
+                    </select>
+                    <span class="text-danger" asp-validation-for="ProductionId"></span>
+                </label>
+
+                <label class="flex flex-col gap-y-2 text-white text-xl font-normal ">
+              Genre 
+                    <select name="genre" id="gender" class="rounded-xl p-[10px] bg-gray-800 text-white text-[16px]">
+                        <option value="">Default</option>
+                        @foreach (var genre in genreService.GetAllGenre())
+                        {
+                            <option value="@genre.Id">@genre.Name</option>
+                        }
+                    </select>
+                </label>
+
+            <button type="button" id="addGender" class="hidden btn btn-success"> Add Gender</button>
+          
+            <div id="gender-container">
+                @if (ViewBag.Serie.GenreSeries != null)
+                {
+                        foreach (var item in ViewBag.Serie.GenreSeries)
+                    {
+                        <div id="genre-@item.GenreId">
+                            <p class="text-white">@item.Genre.Name</p>
+                                <button class="btn btn-danger" type="button" id="delete" onclick="removeItemFromDOM('@item.GenreId')">
+                                Remover item
+                            </button>
+                        </div>
+                    }
+                }
+            </div>
+
+
+           <div class=" flex w-full justify-center gap-x-[10px] mt-[20px]">
+                    <a href="/MiniNetflix/serie" class="btn btn-secondary w-[200px]" > Volver</a>
+               <button type="submit" class="btn btn-success w-[200px] ">Enviar</button>     
+           </div>
+        </form>
+        </div>
+</div>  
+</div>
+
+
+
+@section Scripts {
+    <script src="~/js/utils/genreUtils.js" type="module"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script type="module">
+        import handleSubmit from '/js/sentData/handleSubmit.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('form');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if ($(form).valid()) {
+                    await handleSubmit(form);
+                }
+            });
+        });
+    </script>
+}

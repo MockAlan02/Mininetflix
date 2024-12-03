@@ -1,0 +1,106 @@
+@inject IGenreService genreService;
+@inject ISerieService serieService;
+@inject IProductionService productionService;
+@{
+    Filtered filter = new();
+}
+
+
+<div class="w-full  background">
+    
+    <div class="w-full flex justify-center pt-20">
+        <div class="w-[60%] mt-40">
+            <div class="flex items-center justify-between w-full">
+            <div class="flex gap-x-2">
+                <div >
+                    <a href="/Mininetflix/CreateSerie" class="btn btn-success mb-4">Crear Serie</a>
+              <div class="flex w-[70%]  gap-x-4">
+                            <div>
+                                <select name="Genre" id="Genre"
+                                        class="bg-black text-white text-[17px] font-normal w-[200px] px-[10px] py-[7px] rounded-md border border-white"
+                                        style="border: none;">
+                                    <option value="" class="bg-black text-red-500">Genres</option>
+                                    @foreach (var genre in genreService.GetAllGenre())
+                                    {
+                                        <option value="@genre.Id" class="bg-black text-red-500">@genre.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <div>
+                                <select name="Production" id="Production"
+                                        class="bg-black text-white text-[17px] font-normal w-[200px] px-[10px] py-[7px] rounded-md border border-white"
+                                        style="border: none;">
+                                    <option value="" class="bg-black text-red-500">Production</option>
+
+                                    @foreach (var production in productionService.GetAllProduction())
+                                    {
+                                        <option value="@production.Id" class="bg-black text-red-500">@production.Name</option>
+                                    }
+                                </select>
+                            </div>
+                    
+                        <Input type="text" placeholder="Search" id="Search"
+                               class="py-2 px-4 w-[500px] rounded-md bg-black text-white border border-white text-[16px]"
+                               style="border: none;" name="Name">
+                    </div>
+                    </div>
+              </div>
+            </div>
+            <div class="grid   mx-auto mt-20 min-h-[800px] md:grid-cols-2 lg:grid-cols-4" id="Movie-Container">
+         
+                @foreach(var serie in serieService.GetAllSerie(filter).Items)
+                    {    
+                    <div class="w-[200px] h-[300px] bg-black text-white mb-10 cursor-pointer" >
+                    <img src="@serie.ImageUrl" alt="" class="w-full h-full object-cover">
+                    <p>@serie.Name</p>
+                     <button class="btn btn-danger" onclick="SwapDelete (@serie.Id)">Delete</button>
+                    <button  class="btn btn-success" onclick="redirectEdit(@serie.Id)">Edit</button>     
+                </div> 
+                    }
+        </div>    
+    </div>  
+</div>
+       
+ 
+</div>
+<script src="~/js/filter/filter.js"></script>
+
+<script>
+    function deleteMovie(id){
+
+        console.log(id);
+        const url = `https://localhost:7189/MiniNetflix/?id=${id}`
+        fetch(url, { method: 'DELETE' })
+            .then(res => res.text()) 
+            .then(res => console.log(res))
+    }
+
+    function redirectEdit(id) {
+        window.location = "/Mininetflix/UpdateSerie/" + id;
+    }
+
+   
+
+    function SwapDelete(id) {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteMovie(id);
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Your Serie has been deleted.",
+                    icon: "success"
+                });
+            }
+        });
+    }
+</script>
+
+

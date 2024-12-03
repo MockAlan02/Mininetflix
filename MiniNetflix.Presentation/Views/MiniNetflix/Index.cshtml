@@ -1,0 +1,90 @@
+﻿
+@using Microsoft.JSInterop
+@inject IGenreService genreService;
+@inject ISerieService serieService;
+@inject IProductionService productionService;
+@{
+    Filtered filter = new();
+}
+
+
+<div class="w-full background">
+    
+    <div class="w-full h-[800px] mx-auto ">
+  
+        <img src="~/Img/net.jpg" class="w-full h-full object-cover "
+        style="mask-image: linear-gradient(black 85%, transparent 100%)" alt="">
+    </div>
+
+    <div class="w-full flex justify-center pt-20">
+      <div class="w-[60%]">
+    <div class="flex items-center justify-between w-full">
+            <div class="flex gap-x-2">
+                
+                <div>
+                    <select name="Genre" id="Genre"
+                        class="bg-black text-white text-[17px] font-normal w-[200px] px-[10px] py-[7px] rounded-md border border-white"
+                        style="border: none;">
+                        <option value="" class="bg-black text-red-500">Genres</option>
+                        @foreach(var genre in genreService.GetAllGenre())
+                        {
+                            <option value="@genre.Id" class="bg-black text-red-500">@genre.Name</option>
+                        }
+                    </select>
+                </div>
+
+                <div>
+                    <select name="Production" id="Production"
+                        class="bg-black text-white text-[17px] font-normal w-[200px] px-[10px] py-[7px] rounded-md border border-white"
+                        style="border: none;">
+                        <option value="" class="bg-black text-red-500">Production</option>
+
+                        @foreach(var production in productionService.GetAllProduction())
+                        {
+                            <option value="@production.Id" class="bg-black text-red-500">@production.Name</option>
+                        }
+                    </select>
+                </div>
+
+            </div>
+            <Input type="text" placeholder="Search" id="Search"  
+            class="py-2 px-4 w-[500px] rounded-md bg-black text-white border border-white text-[16px]"   
+        style="border: none;" name="Name"></Input>   
+    </div>
+            <div class="grid   mx-auto mt-20 min-h-[800px] md:grid-cols-2 lg:grid-cols-4" id="Movie-Container">
+          <!-- Add all movie from list -->
+                @foreach(var serie in serieService.GetAllSerie(filter).Items) 
+            {
+                    <div class="movie-card" onclick="redirectDetail(@serie.Id)">
+                        <img src="@serie.ImageUrl" alt="@serie.Name">
+                        <div class="overlay">
+                            <ul class="list-disc">
+                                <h3 class="text-red-400 text-2xl font-bold mb-4">Genres</h3>
+                               <!-- Add list of genre in the overlay -->
+                                @{
+                                    var data = await serieService.GetSerieWithGenre(serie.Id);
+                                    if (data.GenreSeries == null) return;
+                                    @foreach (var item in data.GenreSeries)
+                                    {
+                                        <li>@item.Genre!.Name</li>
+                                    }
+                               }
+                               
+                            </ul>
+                        </div>
+                        <p class="text-center font-bold mt-2">@serie.Name</p>
+                    </div>
+            }   
+        </div>   
+    </div>
+</div>
+       
+ 
+</div>
+<script src="~/js/filter/filter.js"></script>
+<script>
+    function redirectDetail(id) {
+        window.location = "MiniNetflix/detail/" + id;
+    }
+   
+</script>

@@ -1,0 +1,42 @@
+﻿@using WebApplication1.ViewModelError
+@model PersonaViewModel
+
+<form method="post" class="mt-4">
+    <div class="form-group">
+        <input asp-for="@Model.Name" class="form-control" />
+        <span class="text-danger" asp-validation-for="@Model.Name"></span>
+    </div>
+    <div class="form-group">
+        <input asp-for="@Model.Age" class="form-control" />
+        <span class="text-danger" asp-validation-for="@Model.Age"></span>
+    </div>
+    <div class="form-group">
+        <button type="submit">Send</button>
+    </div>
+    <div class="form-group">
+        <select id="optionSelect" asp-for="@Model.Option" onchange="toggleButton()">
+            <option value=""> Default</option>
+            <option value="1">nada</option>
+        </select>
+
+        <button id="addButton" class="invisible">Agregar</button>
+
+    </div>
+</form>
+
+@section Scripts {
+    <script type="text/javascript">
+        function toggleButton() {
+            var selectElement = document.getElementById("optionSelect");
+            var buttonElement = document.getElementById("addButton");
+            if (selectElement.value !== "") {
+                buttonElement.classList.remove("invisible");
+            } else {
+                buttonElement.classList.add("invisible");
+            }
+        }
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}
+

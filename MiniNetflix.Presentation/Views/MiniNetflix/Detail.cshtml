@@ -1,0 +1,49 @@
+﻿@model Serie
+
+
+<div class="w-full h-dvh background">
+    <div class="z-20 w-full h-[80px] bg-black mb-[-60px] z-10 pt-4 ">
+        <a href="/" class="text-white text-3xl ml-4 mb-10"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+    </div>
+    <div class="w-full flex flex-col items-center pt-20">
+        <div class="embed-responsive embed-responsive-16by9 w-full h-dvh mt-[-30px] z-[20]">
+            <iframe class="embed-responsive-item w-full h-full"
+                    src=@Model.LinkVideo
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen>
+            </iframe>
+        </div>
+        <div class="flex w-[80%] relative">
+            <div class="absolute top-0 left-0 w-[400px] h-full gradient-01 opacity-70 z-0"></div>
+            <div class="flex w-full z-10 p-4">
+                <img src="@Model.ImageUrl" alt="@Model.Name" class="w-[200px] mb-4 rounded-xl" />
+                <div class="ml-14">
+                    <h3 class="text-white text-3xl font-bold">@Model.Name</h3>
+                    <p class="text-white mt-8 text-xl">Genre</p>
+                    @{
+                        if(Model.GenreSeries != null)
+                        {
+                            <ul class="mt-4 list-disc">
+                            @foreach(var item in Model.GenreSeries)
+                            {
+                              <li class="text-red-400 ">@item.Genre!.Name</li>
+                            } 
+                            </ul>
+                        }
+                    }
+                    <div class="absolute top-0 right-[400px] w-[300px] h-full gradient-01 opacity-70 z-[-10]"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+            document.addEventListener('DOMContentLoaded', function() {
+            hideMenu();
+        });
+    </script>

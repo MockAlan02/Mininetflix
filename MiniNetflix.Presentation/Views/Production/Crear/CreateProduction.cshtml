@@ -1,0 +1,35 @@
+﻿@model MiniNetflix.Presentation.ViewModelError.ProductionViewModel
+<div class="w-full h-dvh background">
+    <div class="w-full flex justify-center  pt-20">
+       <div class="w-[60%] mx-auto bg-gray-900 p-10 rounded-2xl">
+            <h1 class="text-white text-3xl font-bold mb-10">Create Production</h1>
+            <form method="post" id="form">
+                <label class="flex flex-col gap-y-2 text-white text-xl font-normal mb-4">
+                   Production Name
+                    <input type="text" asp-for="Name" name="Name" class="rounded-xl p-[10px] bg-gray-800 text-white text-[16px]" required/>
+                    <span class="text-danger" asp-validation-for="Name"></span>
+               </label>
+                <button type="submit" class="btn btn-success">Create Production </button>
+            </form>
+       </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script type="module">
+
+        import { handleSubmitProduction } from '/js/sentData/productionForm.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('form');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if ($(form).valid()) {
+                    await handleSubmitProduction(form);
+                }
+            });
+        });
+    </script>
+    
+}
